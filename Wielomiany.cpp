@@ -1,22 +1,21 @@
-﻿
 #include <iostream>
-#include <cstring>  // strlen
-#include <cstdlib>  // strtol i strtod
+#include <cstring>
+#include <cstdlib>
+
+using namespace std;
 
 typedef struct {
-    float* wspolczynnik;
+    float *wspolczynnik;
     int stopien;
 } Wielomian;
 
 char* UsunOdstepy(const char* napis) {
     char* napis2;
     int y = 0, dlugosc = strlen(napis);
-    napis2 = new char[dlugosc + 1];
-
+    napis2 = new char [dlugosc + 1];
     for (int i = 0; i < dlugosc; i++)
-        if (napis[i] != ' ')
+        if (napis[i] != ' ') 
             napis2[y++] = napis[i];
-
     napis2[y] = 0;
     return napis2;
 }
@@ -25,35 +24,29 @@ int OkreslStopien(const char* napis) {
     int maksStopien = 0;
     int stopien = 0;
     int i = 0;
-
     while (napis[i]) {
         if (napis[i] == 'x') {
             if (napis[i + 1] == '^') {
                 char* koniecNapisu;
-                stopien = strtol(&napis[i + 2], &koniecNapisu, 10);
+                stopien = strtol(&napis[i+2], &koniecNapisu, 10);
                 i = koniecNapisu - napis;
             }
             else {
                 stopien = 1;
                 i++;
             }
-
             if (stopien > maksStopien)
                 maksStopien = stopien;
         }
         else
             i++;
     }
-
     return maksStopien;
 }
-
 float* PrzydzielPamiec(int stopien) {
     float* tab = new float[stopien + 1];
-
     for (int i = 0; i <= stopien; i++)
         tab[i] = 0.0f;
-
     return tab;
 }
 
@@ -86,7 +79,7 @@ const char* AnalizujJednomian(const char* napis, Wielomian* w)
             wykladnik = strtol(++napis, &koniecNapisu, 10);
             napis = koniecNapisu;
         }
-        else
+        else 
             wykladnik = 1;
     }
 
@@ -94,23 +87,19 @@ const char* AnalizujJednomian(const char* napis, Wielomian* w)
     return napis;
 }
 
-void AnalizujJednomiany(const char* napis, Wielomian* w) {
-    while (*napis)
+void AnalizujJednomiany(const char* napis, Wielomian *w){
+    while(*napis)
         napis = AnalizujJednomian(napis, w);
 }
-
 Wielomian Analizuj(const char* napis)
 {
     char* bezOdstepow = UsunOdstepy(napis);
     Wielomian w;
-
     w.stopien = OkreslStopien(bezOdstepow);
     w.wspolczynnik = PrzydzielPamiec(w.stopien);
-
     AnalizujJednomiany(bezOdstepow, &w);
-
-    delete[] bezOdstepow;  
-    return w;             
+    delete[] bezOdstepow;
+    return w;
 }
 
 void Pokaz(Wielomian w)
@@ -124,32 +113,32 @@ void Pokaz(Wielomian w)
         if (a != 0)
         {
             if (pierwszy == 0 && a > 0)
-                std::cout << "+";
+                cout << "+";
 
             if (a < 0)
-                std::cout << "-";
+                cout << "-";
 
             if (i == 0)
             {
                 if (a < 0)
-                    std::cout << -a;
+                    cout << -a;
                 else
-                    std::cout << a;
+                    cout << a;
             }
             else
             {
                 if (a != 1 && a != -1)
                 {
                     if (a < 0)
-                        std::cout << -a;
+                        cout << -a;
                     else
-                        std::cout << a;
+                        cout << a;
                 }
 
-                std::cout << "x";
+                cout << "x";
 
                 if (i > 1)
-                    std::cout << "^" << i;
+                    cout << "^" << i;
             }
 
             pierwszy = 0;
@@ -157,18 +146,33 @@ void Pokaz(Wielomian w)
     }
 
     if (pierwszy == 1)
-        std::cout << "0";
+        cout << "0";
 
-    std::cout << std::endl;
+    cout << endl;
 }
 
 int main()
 {
-    const char* napis = "x^3-x^2+2x-7.5";
+    const char* przyklady[] = {
+        "x^3-x^2+2x-7.5",
+        "3x^2+5x+2",
+        "x^4-2x^2+1",
+        "-x^3+x-4",
+        "5",
+        "x",
+        "-x",
+        "0"
+    };
 
-    Wielomian w = Analizuj(napis);
-    Pokaz(w);
+    for (int i = 0; i < 8; i++)
+    {
+        Wielomian w = Analizuj(przyklady[i]);
 
-    delete[] w.wspolczynnik;  
-    return 0;                 
+        cout << "Przyklad " << i + 1 << ": ";
+        Pokaz(w);
+
+        delete[] w.wspolczynnik;
+    }
+
+    return 0;
 }
