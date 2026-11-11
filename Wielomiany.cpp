@@ -21,6 +21,8 @@ public:
     ~Wielomian();
 
     Wielomian& operator=(const Wielomian& w);
+    Wielomian& operator+=(const Wielomian& w);
+    Wielomian operator+(const Wielomian& w) const;
 
     int PobierzStopien() const;
     float PobierzWspolczynnik(int i) const;
@@ -181,6 +183,32 @@ Wielomian& Wielomian::operator=(const Wielomian& w)
     return *this;
 }
 
+Wielomian& Wielomian::operator+=(const Wielomian& w)
+{
+    if (stopien < w.stopien) {
+        float* nowaTablica = PrzydzielPamiec(w.stopien);
+
+        for (int i = 0; i <= stopien; i++)
+            nowaTablica[i] = wspolczynnik[i];
+
+        delete[] wspolczynnik;
+        wspolczynnik = nowaTablica;
+        stopien = w.stopien;
+    }
+
+    for (int i = 0; i <= w.stopien; i++)
+        wspolczynnik[i] += w.wspolczynnik[i];
+
+    return *this;
+}
+
+Wielomian Wielomian::operator+(const Wielomian& w) const
+{
+    Wielomian wynik(*this);
+    wynik += w;
+    return wynik;
+}
+
 int Wielomian::PobierzStopien() const
 {
     return stopien;
@@ -270,6 +298,33 @@ int main()
     pusty = oryginal;
     cout << "Po przypisaniu: ";
     pusty.Pokaz();
+
+    Wielomian a("x^2+2x+1");
+    Wielomian b("x^3-x^2+3");
+
+    cout << "Pierwszy wielomian: ";
+    a.Pokaz();
+    cout << "Drugi wielomian: ";
+    b.Pokaz();
+
+    Wielomian suma = a + b;
+    cout << "a + b: ";
+    suma.Pokaz();
+
+    a += b;
+    cout << "a += b: ";
+    a.Pokaz();
+
+    Wielomian c("x^2+2x+1");
+    Wielomian d("-x^2-2x-1");
+    cout << "c + d: ";
+    (c + d).Pokaz();
+
+    Wielomian e("x^4+1");
+    Wielomian f("2x-3");
+    e += f;
+    cout << "e += f: ";
+    e.Pokaz();
 
     return 0;
 }
