@@ -42,7 +42,12 @@ public:
 
     int PobierzStopien() const;
     double PobierzWspolczynnik(int i) const;
+    double operator()(double x) const;
+    double operator[](int i) const;
     void Pokaz() const;
+
+    friend ostream& operator<<(ostream& wyjscie, const Wielomian& w);
+    friend istream& operator>>(istream& wejscie, Wielomian& w);
 };
 
 char* UsunOdstepy(const char* napis)
@@ -427,41 +432,82 @@ double Wielomian::PobierzWspolczynnik(int i) const
     return 0;
 }
 
+double Wielomian::operator()(double x) const
+{
+    double wynik = 0;
+
+    for (int i = stopien; i >= 0; i--)
+        wynik = wynik * x + wspolczynnik[i];
+
+    return wynik;
+}
+
+double Wielomian::operator[](int i) const
+{
+    if (i >= 0 && i <= stopien)
+        return wspolczynnik[i];
+
+    return 0;
+}
+
 void Wielomian::Pokaz() const
+{
+    cout << *this << endl;
+}
+
+ostream& operator<<(ostream& wyjscie, const Wielomian& w)
 {
     int pierwszy = 1;
 
-    for (int i = stopien; i >= 0; i--) {
-        double a = wspolczynnik[i];
+    for (int i = w.stopien; i >= 0; i--) {
+        double a = w.wspolczynnik[i];
+
         if (a != 0) {
             if (pierwszy == 0 && a > 0)
-                cout << "+";
+                wyjscie << "+";
             if (a < 0)
-                cout << "-";
+                wyjscie << "-";
 
             if (i == 0) {
                 if (a < 0)
-                    cout << -a;
+                    wyjscie << -a;
                 else
-                    cout << a;
+                    wyjscie << a;
             }
             else {
                 if (a != 1 && a != -1) {
                     if (a < 0)
-                        cout << -a;
+                        wyjscie << -a;
                     else
-                        cout << a;
+                        wyjscie << a;
                 }
-                cout << "x";
+
+                wyjscie << "x";
+
                 if (i > 1)
-                    cout << "^" << i;
+                    wyjscie << "^" << i;
             }
+
             pierwszy = 0;
         }
     }
+
     if (pierwszy == 1)
-        cout << "0";
-    cout << endl;
+        wyjscie << "0";
+
+    return wyjscie;
+}
+
+istream& operator>>(istream& wejscie, Wielomian& w)
+{
+    char napis[256];
+
+    if (wejscie.getline(napis, 256)) {
+        Wielomian nowy(napis);
+        w = nowy;
+    }
+
+    return wejscie;
 }
 
 int main()
@@ -638,6 +684,33 @@ int main()
 
     cout << "maly / duzy: ";
     (maly / duzy).Pokaz();
+
+    // Wartosc wielomianu - schemat Hornera
+    Wielomian horner("2x^2+3x+1");
+
+    cout << "W(2) = " << horner(2) << endl;
+    cout << "W(0) = " << horner(0) << endl;
+
+    // Operator [] - odczyt wspolczynnika
+    Wielomian indeks("3x^2+5x+2");
+
+    cout << "indeks[2] = " << indeks[2] << endl;
+    cout << "indeks[1] = " << indeks[1] << endl;
+    cout << "indeks[0] = " << indeks[0] << endl;
+    cout << "indeks[5] = " << indeks[5] << endl;
+
+    // Operator << - wypisywanie wielomianu
+    Wielomian wypisz("3x^2-2x+7");
+
+    cout << "Operator << : " << wypisz << endl;
+
+    // Operator >> - wczytywanie wielomianu
+    Wielomian wczytany;
+
+    cout << "Podaj wielomian: ";
+    cin >> wczytany;
+
+    cout << "Wczytany wielomian: " << wczytany << endl;
 
     return 0;
 }
