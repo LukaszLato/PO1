@@ -15,8 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Wielomiany.cpp">
+    <ClCompile Include="Wielomian.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="testy.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClInclude Include="Wielomian.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
