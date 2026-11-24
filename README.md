@@ -9,7 +9,7 @@
  - [x] operatory += (metoda klasy) i +
  - [ ] pozostałe operatory arytmetyczne: -= - *= * /= / %= % (różne konteksty: wielomiany i liczby)
  - [x] dodatkowe operatory: () [] << >> 
- - [ ] podział na pliki Wielomian.h, Wielomian.cpp, testy.cpp
+ - [x] podział na pliki Wielomian.h, Wielomian.cpp, testy.cpp
 
 ## Zad 2: Dziedziczenie wielomianów
 - [ ] A. Klasa Jednomian jako potomna klasy Wielomian
